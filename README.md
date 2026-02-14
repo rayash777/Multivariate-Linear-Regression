@@ -31,6 +31,9 @@ Run the program.
 
 ## Program:
 ```
+# Program to find the solution of a matrix using Gaussian Elimination.
+# Developed by: Aniruth S
+# RegisterNumber: 212225040020 
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import datasets, linear_model, metrics
