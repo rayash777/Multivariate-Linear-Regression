@@ -33,40 +33,54 @@ Run the program.
 ```
 # Program to find the solution of a matrix using Gaussian Elimination.
 # Developed by: Aniruth S
-# RegisterNumber: 212225040020 
+# RegisterNumber: 212225040020
+
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn import datasets, linear_model, metrics
-
-# ✅ load the California housing dataset (replacement for Boston)
-housing = datasets.fetch_california_housing()
-
-# defining feature matrix (X) and response vector (y)
-X = housing.data
-y = housing.target
-
-# splitting X and y into training and testing sets
+import pandas as pd
+from sklearn import linear_model
 from sklearn.model_selection import train_test_split
+
+# -----------------------------
+# Load the Boston dataset properly
+# -----------------------------
+data_url = "http://lib.stat.cmu.edu/datasets/boston"
+raw_df = pd.read_csv(data_url, sep=r"\s+", skiprows=22, header=None)
+
+# Correct reshaping (VERY IMPORTANT)
+data = np.hstack([raw_df.values[::2, :], raw_df.values[1::2, :2]])
+target = raw_df.values[1::2, 2]
+
+# Remove any NaN values (safety check)
+mask = ~(np.isnan(data).any(axis=1) | np.isnan(target))
+X = data[mask]
+y = target[mask]
+
+# -----------------------------
+# Split into train and test sets
+# -----------------------------
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.4, random_state=1
 )
 
-# create linear regression object
+# -----------------------------
+# Create and train Linear Regression model
+# -----------------------------
 reg = linear_model.LinearRegression()
-
-# train the model using the training sets
 reg.fit(X_train, y_train)
 
-# regression coefficients
+# -----------------------------
+# Print Results
+# -----------------------------
 print("Coefficients:", reg.coef_)
+print("Variance score:", reg.score(X_test, y_test))
 
-# variance score: 1 means perfect prediction
-print("Variance score: {}".format(reg.score(X_test, y_test)))
-
-# plot for residual error
+# -----------------------------
+# Plot Residual Errors
+# -----------------------------
 plt.style.use("fivethirtyeight")
 
-# plotting residual errors in training data
+# Training residuals
 plt.scatter(
     reg.predict(X_train),
     reg.predict(X_train) - y_train,
@@ -75,7 +89,7 @@ plt.scatter(
     label="Train data",
 )
 
-# plotting residual errors in test data
+# Testing residuals
 plt.scatter(
     reg.predict(X_test),
     reg.predict(X_test) - y_test,
@@ -84,21 +98,17 @@ plt.scatter(
     label="Test data",
 )
 
-# plotting line for zero residual error
-plt.hlines(y=0, xmin=0, xmax=max(reg.predict(X_test)), linewidth=2)
+# Zero residual line
+plt.hlines(y=0, xmin=0, xmax=50, linewidth=2)
 
-# plotting legend
 plt.legend(loc="upper right")
-
-# plot title
 plt.title("Residual errors")
-
-# show plot
-plt.show() 
+plt.show()
 ```
 ## Output:
 
-<img width="797" height="700" alt="{ADDB4DFC-9AD4-4089-97AB-6F3412E9778C}" src="https://github.com/user-attachments/assets/6c517102-1878-4272-9d2f-78bb5165a162" />
+<img width="891" height="736" alt="{1A081BEF-6AF4-47DC-9B44-2B72EB20E27D}" src="https://github.com/user-attachments/assets/48fb0ec7-6469-482d-a1cd-70d9f53ebf49" />
+
 
 <br>
 
